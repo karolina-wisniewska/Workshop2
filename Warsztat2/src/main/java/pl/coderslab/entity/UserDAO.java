@@ -84,15 +84,13 @@ public class UserDAO {
                         selectedUser.setUserName(result.getString(3));
                         selectedUser.setPassword(result.getString(4));
                     }
+                    return selectedUser;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(selectedUser.getId()==0){
-            return null;
-        }
-        return selectedUser;
+        return null;
     }
 
     public void update(User user){
@@ -137,11 +135,12 @@ public class UserDAO {
                         nextUser.setPassword(result.getString(4));
                         allUsers = addToArray(nextUser, allUsers);
                     }
+                    return allUsers;
                 }
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return allUsers;
     }
 
     private User[] addToArray(User u, User[] users) {
