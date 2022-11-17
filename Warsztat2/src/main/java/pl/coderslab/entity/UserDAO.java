@@ -40,8 +40,6 @@ public class UserDAO {
 
         User[] result = userDAO.findAll();
         System.out.println(Arrays.toString(result));
-
-
     }
 
     public String hashPassword(String password) {
