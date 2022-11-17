@@ -29,13 +29,13 @@ public class UserDAO {
 
         UserDAO userDAO = new UserDAO();
 
-        User updatedUser = userDAO.read(4);
+/*        User userToUpdate = userDAO.read(4);
+        userToUpdate.setUserName("User4");
+        userToUpdate.setEmail("user4@email.com");
+        userToUpdate.setPassword("pass4");
+        userDAO.update(userToUpdate);*/
 
-        updatedUser.setUserName("User4");
-        updatedUser.setEmail("user4@email.com");
-        updatedUser.setPassword("pass4");
-        userDAO.update(updatedUser);
-
+        userDAO.delete(2);
 
     }
 
@@ -101,6 +101,19 @@ public class UserDAO {
             statement.setString(2, user.getEmail());
             statement.setString(3, hashPassword(user.getPassword()));
             statement.setInt(4,user.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(int userId) {
+        try (Connection conn = DbUtil.getConnection()) {
+            PreparedStatement statement =
+                    conn.prepareStatement(DELETE_USER_QUERY);
+
+            statement.setInt(1, userId);
             statement.executeUpdate();
 
         } catch (SQLException e) {
