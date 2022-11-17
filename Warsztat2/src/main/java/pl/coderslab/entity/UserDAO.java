@@ -4,6 +4,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import pl.coderslab.DbUtil;
 
 import java.sql.*;
+import java.util.Arrays;
 
 public class UserDAO {
 
@@ -18,16 +19,16 @@ public class UserDAO {
 
     public static final String SELECT_USER_BY_ID_QUERY="SELECT * FROM workshop2.users WHERE id = ?;";
 
+    public static final String SELECT_USERS="SELECT * FROM workshop2.users;";
+
     public static void main(String[] args) {
-/*        User user2 = new User();
-        user2.setUserName("User2");
-        user2.setEmail("user2@email.com");
-        user2.setPassword("pass2");
-
         UserDAO userDAO = new UserDAO();
-        userDAO.create(user2);*/
 
-        UserDAO userDAO = new UserDAO();
+/*        User newUser = new User();
+        newUser.setUserName("User7");
+        newUser.setEmail("user7@email.com");
+        newUser.setPassword("pass7");
+        userDAO.create(newUser);*/
 
 /*        User userToUpdate = userDAO.read(4);
         userToUpdate.setUserName("User4");
@@ -35,7 +36,11 @@ public class UserDAO {
         userToUpdate.setPassword("pass4");
         userDAO.update(userToUpdate);*/
 
-        userDAO.delete(2);
+//        userDAO.delete(2);
+
+        User[] result = userDAO.findAll();
+        System.out.println(Arrays.toString(result));
+
 
     }
 
@@ -119,5 +124,31 @@ public class UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public User[] findAll() {
+        User[] allUsers = new User[0];
+        try (Connection conn = DbUtil.getConnection();
+            Statement statement = conn.createStatement()){
+                try(ResultSet result = statement.executeQuery(SELECT_USERS)){
+                    while(result.next()){
+                        User nextUser = new User();
+                        nextUser.setId(result.getInt(1));
+                        nextUser.setEmail(result.getString(2));
+                        nextUser.setUserName(result.getString(3));
+                        nextUser.setPassword(result.getString(4));
+                        allUsers = addToArray(nextUser, allUsers);
+                    }
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allUsers;
+    }
+
+    private User[] addToArray(User u, User[] users) {
+        User[] tmpUsers = Arrays.copyOf(users, users.length + 1); // Tworzymy kopię tablicy powiększoną o 1.
+        tmpUsers[users.length] = u; // Dodajemy obiekt na ostatniej pozycji.
+        return tmpUsers; // Zwracamy nową tablicę.
     }
 }
